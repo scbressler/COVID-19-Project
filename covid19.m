@@ -14,7 +14,8 @@ renderMovieFile = 1; % create movie animation of Figure 1? [0=no, 1=yes]
 mvw = 3; % moving average window (days)
 
 % Which STATE(S) to highlight
-x = {'Massachusetts'};
+x = {'Massachusetts','Washington'};
+cm = winter(length(x)); % set up color map for individual state plots
 
 %% Import STATE data
 %   Data from the New York Times COVID-19 database from Github
@@ -97,16 +98,19 @@ end
 [~,idx] = ismember(x,allStates);
 
 for k = 1:length(idx)
-    p11(idx(k)).Color = [199,21,133]/255;
+    p11(idx(k)).Color = cm(k,:);
     p11(idx(k)).LineWidth = 3;
     uistack(p11(idx(k)));
 end
 
 % Highlight New York for reference?
 if 1
-    p11(strcmp(allStates,'New York')).Color = [0 0.4470 0.7410];
+    p11(strcmp(allStates,'New York')).Color = 'r'; %[0 0.4470 0.7410];
     p11(strcmp(allStates,'New York')).LineWidth = 1;
 end
+
+lgd1 = legend(p11([find(strcmp(allStates,'New York')),idx]),...
+               ['New York', x], 'Location','NorthWest');
 
 drawnow;
 F(end+1) = getframe(f1);
@@ -115,54 +119,57 @@ print(f1,'Figures/New Cases vs Total Cases-US.eps','-depsc')
 
 %% Figure 2: New cases per day by STATE
 plotFrom = '01-Mar-2020';
-idx = find(strcmp(allDates,plotFrom));
+dk = find(strcmp(allDates,plotFrom));
 f2 = figure('Position',[1 472 560 333]);
-p2 = plot((idx+1):length(allDates),dNCASES(idx:end,:),'.-','Color',0.6*ones(1,3));
+p2 = plot((dk+1):length(allDates),dNCASES(dk:end,:),'.-','Color',0.6*ones(1,3));
 
 % Highlight New York and other state
-p2(strcmp(allStates,'New York')).Color = [0 0.4470 0.7410];
-p2(strcmp(allStates,x)).Color = [199,21,133]/255;
-p2(strcmp(allStates,x)).LineWidth = 2;
+p2(strcmp(allStates,'New York')).Color = 'r'; %[0 0.4470 0.7410];
+for k = 1:length(idx)
+    p2(idx(k)).Color = cm(k,:);
+    p2(idx(k)).LineWidth = 2;
+    uistack(p2(idx(k)));
+end
 
 ax2 = gca;
 ax2.YScale = 'linear';
-ax2.XTick = idx:7:length(allDates);
-ax2.XTickLabel = datestr(allDates([idx:7:end]),'dd-mmm');
+ax2.XTick = dk:7:length(allDates);
+ax2.XTickLabel = datestr(allDates([dk:7:end]),'dd-mmm');
 ax2.XTickLabelRotation = 35;
 ax2.YLabel.String = sprintf('Ave. New Cases Across Previous %d Days',mvw);
 ax2.YLabel.FontSize = 12;
 ax2.XGrid = 'on'; ax2.YGrid = 'on';
 ax2.Title.String = sprintf('Newly Diagnosed Cases (averaged across previous %d days)',mvw);
 
-lgd2 = legend([p2(strcmp(allStates,'New York')),p2(strcmp(allStates,x))],...
+lgd2 = legend(p2([find(strcmp(allStates,'New York')),idx]),...
                ['New York', x], 'Location','NorthWest');
            
 print(f2,'Figures/New Cases-US.eps','-depsc');
 
 %% Figure 3: Total Confirmed Cases per day by STATE
-% plotFrom = '01-Mar-2020';
-% idx = find(strcmp(allDates,plotFrom));
-f3 = figure('Position',[440 472 560 333]);
-p3 = plot(idx:length(allDates),CASES(idx:end,:),'.-','Color',0.6*ones(1,3));
+f3 = figure('Position',[860 30 560 333]);
+p3 = plot(dk:length(allDates),CASES(dk:end,:),'.-','Color',0.6*ones(1,3));
 
 % Highlight New York and other state
-p3(strcmp(allStates,'New York')).Color = [0 0.4470 0.7410];
-p3(strcmp(allStates,x)).Color = [199,21,133]/255;
-p3(strcmp(allStates,x)).LineWidth = 2;
+p3(strcmp(allStates,'New York')).Color = 'r'; %[0 0.4470 0.7410];
+for k = 1:length(idx)
+    p3(idx(k)).Color = cm(k,:);
+    p3(idx(k)).LineWidth = 2;
+    uistack(p3(idx(k)));
+end
 
 ax3 = gca;
 ax3.YScale = 'linear';
-ax3.XTick = idx:7:length(allDates);
-ax3.XTickLabel = datestr(allDates([idx:7:end]),'dd-mmm');
+ax3.XTick = dk:7:length(allDates);
+ax3.XTickLabel = datestr(allDates([dk:7:end]),'dd-mmm');
 ax3.XTickLabelRotation = 35;
 ax3.YLabel.String = 'Total Number of Cases';
 ax3.YLabel.FontSize = 12;
 ax3.XGrid = 'on'; ax3.YGrid = 'on';
 ax3.Title.String = sprintf('Total Confirmed Cases as of %s',allDates{end});
 
-lgd3 = legend([p3(strcmp(allStates,'New York')),p3(strcmp(allStates,x))],...
+lgd3 = legend(p3([find(strcmp(allStates,'New York')),idx]),...
                ['New York', x], 'Location','NorthWest');
-           
 print(f3,'Figures/Total Confirmed Cases-US.eps','-depsc');
 
 %% Movie
