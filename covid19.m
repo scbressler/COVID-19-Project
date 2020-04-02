@@ -114,7 +114,6 @@ F(end+1) = getframe(f1);
 print(f1,'Figures/New Cases vs Total Cases-US.eps','-depsc')
 
 %% Figure 2: New cases per day by STATE
-close all;
 plotFrom = '01-Mar-2020';
 idx = find(strcmp(allDates,plotFrom));
 f2 = figure('Position',[1 472 560 333]);
