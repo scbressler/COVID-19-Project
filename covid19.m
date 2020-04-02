@@ -132,11 +132,38 @@ ax2.XTickLabelRotation = 35;
 ax2.YLabel.String = sprintf('Ave. New Cases Across Previous %d Days',mvw);
 ax2.YLabel.FontSize = 12;
 ax2.XGrid = 'on'; ax2.YGrid = 'on';
+ax2.Title.String = sprintf('Newly Diagnosed Cases (averaged across previous %d days)',mvw);
 
 lgd2 = legend([p2(strcmp(allStates,'New York')),p2(strcmp(allStates,x))],...
                ['New York', x], 'Location','NorthWest');
            
 print(f2,'Figures/New Cases-US.eps','-depsc');
+
+%% Figure 3: Total Confirmed Cases per day by STATE
+% plotFrom = '01-Mar-2020';
+% idx = find(strcmp(allDates,plotFrom));
+f3 = figure('Position',[440 472 560 333]);
+p3 = plot(idx:length(allDates),CASES(idx:end,:),'.-','Color',0.6*ones(1,3));
+
+% Highlight New York and other state
+p3(strcmp(allStates,'New York')).Color = [0 0.4470 0.7410];
+p3(strcmp(allStates,x)).Color = [199,21,133]/255;
+p3(strcmp(allStates,x)).LineWidth = 2;
+
+ax3 = gca;
+ax3.YScale = 'linear';
+ax3.XTick = idx:7:length(allDates);
+ax3.XTickLabel = datestr(allDates([idx:7:end]),'dd-mmm');
+ax3.XTickLabelRotation = 35;
+ax3.YLabel.String = 'Total Number of Cases';
+ax3.YLabel.FontSize = 12;
+ax3.XGrid = 'on'; ax3.YGrid = 'on';
+ax3.Title.String = sprintf('Total Confirmed Cases as of %s',allDates{end});
+
+lgd3 = legend([p3(strcmp(allStates,'New York')),p3(strcmp(allStates,x))],...
+               ['New York', x], 'Location','NorthWest');
+           
+print(f3,'Figures/Total Confirmed Cases-US.eps','-depsc');
 
 %% Movie
 if renderMovieFile
