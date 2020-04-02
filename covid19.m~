@@ -5,12 +5,12 @@
 % Created: 2020-04-01 Scott Bressler
 %
 % Datasets:
-%   United States: 
-%   World: 
+%   United States: https://github.com/scbressler/covid-19
+%   World: https://covid.ourworldindata.org/data/ecdc/full_data.csv
 
 clear all; close all; clc;
 
-mvw = 7; % moving average window (days)
+mvw = 3; % moving average window (days)
 
 % Which STATE(S) to highlight
 x = {'Massachusetts'};
@@ -21,11 +21,10 @@ x = {'Massachusetts'};
 [~,~,rawS] = xlsread('covid-19-spreadsheet.xlsx','byState');
 
 header = rawS(1,:);
-dataState = rawS(2:end,:);
-casesStateRAW = cell2mat(rawS(2:end,5));
-deathsStateRAW = cell2mat(rawS(2:end,6));
-states = rawS(2:end,3);
-dates = cellstr(datestr(cell2mat(rawS(2:end,1))));
+dates = cellstr(datestr(cell2mat(rawS(2:end,1))-1));
+states = rawS(2:end,2);
+casesStateRAW = cell2mat(rawS(2:end,4));
+deathsStateRAW = cell2mat(rawS(2:end,5));
 
 allStates = sort(unique(states));
 allST = {'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','GU','HI','ID',...
@@ -33,7 +32,7 @@ allST = {'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','GU','HI','ID',.
          'NE','NV','NH','NJ','NM','NY','NC','ND','NMI','OH','OK','OR','PA',...
          'PR','RI','SC','SD','TN','TX','UT','VT','VI','VA','WA','WV','WI','WY'}';
      
-allDates = cellstr(datestr(sort(unique(cell2mat(rawS(2:end,1))))));
+allDates = cellstr(datestr(sort(unique(cell2mat(rawS(2:end,1))-1))));
 
 %% Compile CASES and DEATHS by STATE
 for d = 1:length(allDates)
@@ -111,6 +110,11 @@ end
 drawnow;
 F(end+1) = getframe;
 
+print(
+
 %% Figure 2: New cases per day by STATE
-f2 = figure;
-p2 = plot(2:length(allDates),dCASES,'.-','Color',0.6*ones(1,3));
+f2 = figure('Position',[1 472 560 333]);
+p2 = plot(2:length(allDates),d7CASES,'.-'); %,'Color',0.6*ones(1,3));
+
+%% Movie
+% movie(f1,F)

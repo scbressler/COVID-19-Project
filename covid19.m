@@ -10,7 +10,7 @@
 
 clear all; close all; clc;
 
-mvw = 7; % moving average window (days)
+mvw = 3; % moving average window (days)
 
 % Which STATE(S) to highlight
 x = {'Massachusetts'};
@@ -110,9 +110,11 @@ end
 drawnow;
 F(end+1) = getframe;
 
+print(f1,'Figures/New Cases vs Total Cases.eps','-depsc')
+
 %% Figure 2: New cases per day by STATE
-f2 = figure;
-p2 = plot(2:length(allDates),dCASES,'.-','Color',0.6*ones(1,3));
+f2 = figure('Position',[1 472 560 333]);
+p2 = plot(2:length(allDates),d7CASES,'.-'); %,'Color',0.6*ones(1,3));
 
 %% Movie
-movie(f1,F)
+% movie(f1,F)
