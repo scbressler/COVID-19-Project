@@ -136,8 +136,12 @@ ax2.YScale = 'linear';
 ax2.XTick = dk:7:length(allDates);
 ax2.XTickLabel = datestr(allDates([dk:7:end]),'dd-mmm');
 ax2.XTickLabelRotation = 35;
+ax2.XLim = [dk-2 length(allDates)+2];
 ax2.YLabel.String = sprintf('Ave. New Cases Across Previous %d Days',mvw);
 ax2.YLabel.FontSize = 12;
+ax2.YLim = [0 12e3];
+ax2.YTick = 0:2e3:12e3;
+ax2.YTickLabel = {'0','2k','4k','6k','8k','10k','12k'};
 ax2.XGrid = 'on'; ax2.YGrid = 'on';
 ax2.Title.String = sprintf('Newly Diagnosed Cases (averaged across previous %d days)',mvw);
 
@@ -163,8 +167,12 @@ ax3.YScale = 'linear';
 ax3.XTick = dk:7:length(allDates);
 ax3.XTickLabel = datestr(allDates([dk:7:end]),'dd-mmm');
 ax3.XTickLabelRotation = 35;
+ax3.XLim = [dk-2 length(allDates)+2];
 ax3.YLabel.String = 'Total Number of Cases';
 ax3.YLabel.FontSize = 12;
+ax3.YLim = [0 150e3];
+ax3.YTick = 0:25e3:150e3;
+ax3.YTickLabel = {'0','25k','50k','75k','100k','125k','150k'};
 ax3.XGrid = 'on'; ax3.YGrid = 'on';
 ax3.Title.String = sprintf('Total Confirmed Cases as of %s',allDates{end});
 

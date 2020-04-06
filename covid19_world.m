@@ -88,8 +88,6 @@ for k = 1:length(whichCountries)-1
     txt2 = text(length(allDates)+2,dNCASES(end,k),whichCountries{k},'FontSize',6);
 end
 
-% ax1.XLim = [100 10e6]; ax1.YLim = [10 1e6];
-
 drawnow;
 
 if printPlots
