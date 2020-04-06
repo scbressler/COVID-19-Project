@@ -65,12 +65,12 @@ p12 = plot(CASES(n,:),dNCASES(n-1,:),'r.','MarkerSize',10);
 %     'HorizontalAlignment','left','FontSize',14);
 
 ax1 = gca;
-ax1.XLim = [1 100000]; ax1.YLim = [0.1 100000];
+ax1.XLim = [1 1e6]; ax1.YLim = [0.1 1e6];
 % ax1.XTick = [1 10 100 1000 10000 100000];
 % ax1.YTick = ax1.XTick;
 ax1.XScale = 'log'; ax1.YScale = 'log';
-ax1.XTickLabel = {'1','10','100','1k','10k','100k'};
-ax1.YTickLabel = {'0.1','1','10','100','1k','10k','100k'};
+ax1.XTickLabel = {'1','10','100','1k','10k','100k','1M'};
+ax1.YTickLabel = {'0.1','1','10','100','1k','10k','100k','1M'};
 ax1.XGrid = 'on'; ax1.YGrid = 'on';
 ax1.XMinorGrid = 'off'; ax1.YMinorGrid = 'off';
 ax1.XLabel.String = 'Total Confirmed Cases';
@@ -82,7 +82,7 @@ ax1.Title.FontSize = 14;
 ax1.NextPlot = 'replacechildren';
 
 % L1 = line(ax1.XLim,ax1.YLim,'LineWidth',1,'LineStyle','--','Color','k');
-L1 = line([1 1e5],[0.1 1e4],'LineWidth',1,'LineStyle','--','Color','k');
+L1 = line([1 1e6],[0.1 1e5],'LineWidth',1,'LineStyle','--','Color','k');
 
 
 for k = 1:length(allStates)
