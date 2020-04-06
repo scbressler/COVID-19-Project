@@ -15,7 +15,7 @@ whichCountries = {'United States','France','India','China','Germany','Iran',...
                   'United Kingdom','Turkey','South Korea','Switzerland','World'};
 
 % Moving average parameter for New Cases for previous nDays
-nDays = 7;
+nDays = 5;
 
 %% Compile data
 for d = 1:length(allDates)
@@ -79,9 +79,9 @@ ax2.XTickLabelRotation = 35;
 ax2.YLabel.String = sprintf('New Cases (ave. %d days)',nDays);
 ax2.XLim = [0 length(allDates)+30];
 ax2.YGrid = 'on';
-ax2.YLim = [0 30000];
-ax2.YTick = 0:5000:30000;
-ax2.YTickLabel = {'0','5k','10k','15k','20k','25k','30k'};
+ax2.YLim = [0 40e3];
+ax2.YTick = 0:5e3:40e3;
+ax2.YTickLabel = {'0','5k','10k','15k','20k','25k','30k','35k','40k'};
 p21 = plot(ax2,1:length(allDates),dNCASES(:,1:end-1),'.-');
 
 for k = 1:length(whichCountries)-1

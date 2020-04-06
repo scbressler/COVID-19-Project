@@ -13,6 +13,10 @@ renderMovieFile = 1; % create movie animation of Figure 1? [0=no, 1=yes]
 
 mvw = 3; % moving average window (days)
 
+% Which STATE(S) to highlight
+x = {'Massachusetts','Washington'};
+cm = winter(length(x)); % set up color map for individual state plots
+
 %% Import STATE data
 %   Data from the New York Times COVID-19 database from Github
 
@@ -32,17 +36,11 @@ allST = {'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','GU','HI','ID',.
      
 allDates = cellstr(datestr(sort(unique(cell2mat(rawS(2:end,1))-1+693961))));
 
-% Which STATE(S) to view:
-whichStates = sort({'Massachusetts','New York'});
-cm = lines(length(whichStates)); % set up color map for individual state plots
-
-kS = find(ismember(allStates,whichStates));
-
 %% Compile CASES and DEATHS by STATE
 for d = 1:length(allDates)
     idxDate = strcmp(dates,allDates(d));
-    for st = 1:length(whichStates)
-        idxState = strcmp(states,allStates(kS(st)));
+    for st = 1:length(allStates)
+        idxState = strcmp(states,allStates(st));
         
         CASES(d,st) = sum(casesStateRAW(idxDate & idxState));
         DEATHS(d,st) = sum(casesStateRAW(idxDate & idxState));
@@ -79,7 +77,7 @@ ax1.XLabel.String = 'Total Confirmed Cases';
 ax1.XLabel.FontSize = 12;
 ax1.YLabel.String = sprintf('Average New Cases Across Previous %d Days',mvw);
 ax1.YLabel.FontSize = 12;
-ax1.Title.String = sprintf('Trajectory of COVID-19 Confirmed Cases as of %s',allDates{n});
+ax1.Title.String = sprintf('Trajectory of COVID-19 Confirmed Cases (%s)',allDates{n});
 ax1.Title.FontSize = 14;
 ax1.NextPlot = 'replacechildren';
 
@@ -87,32 +85,32 @@ ax1.NextPlot = 'replacechildren';
 L1 = line([1 1e6],[0.1 1e5],'LineWidth',1,'LineStyle','--','Color','k');
 
 
-for k = 1:length(whichStates)
-    TXT(k) = text((10^0.02)*CASES(n,k),dNCASES(n-1,k),allStates{kS(k)},'FontSize',6);
+for k = 1:length(allStates)
+    TXT(k) = text((10^0.02)*CASES(n,k),dNCASES(n-1,k),allStates{k},'FontSize',6);
 end
 
 drawnow;
 F(n-1) = getframe(f1);
-pause(0.05);
+pause(0.1);
 
 end
 
-% [~,idx] = ismember(whichStates,allStates);
-% 
-% for k = 1:length(idx)
-%     p11(idx(k)).Color = cm(k,:);
-%     p11(idx(k)).LineWidth = 3;
-%     uistack(p11(idx(k)));
-% end
+[~,idx] = ismember(x,allStates);
+
+for k = 1:length(idx)
+    p11(idx(k)).Color = cm(k,:);
+    p11(idx(k)).LineWidth = 3;
+    uistack(p11(idx(k)));
+end
 
 % Highlight New York for reference?
 if 1
-    p11(strcmp(whichStates,'New York')).Color = 'r'; %[0 0.4470 0.7410];
-    p11(strcmp(whichStates,'New York')).LineWidth = 1;
+    p11(strcmp(allStates,'New York')).Color = 'r'; %[0 0.4470 0.7410];
+    p11(strcmp(allStates,'New York')).LineWidth = 1;
 end
 
-% lgd1 = legend(p11([find(strcmp(allStates,'New York')),idx]),...
-%                ['New York', whichStates], 'Location','NorthWest');
+lgd1 = legend(p11([find(strcmp(allStates,'New York')),idx]),...
+               ['New York', x], 'Location','NorthWest');
 
 drawnow;
 F(end+1) = getframe(f1);
@@ -136,10 +134,7 @@ end
 ax2 = gca;
 ax2.YScale = 'linear';
 ax2.XTick = dk:7:length(allDates);
-ax2.XLim = [dk-5 length(allDates)+5];
 ax2.XTickLabel = datestr(allDates([dk:7:end]),'dd-mmm');
-ax2.YTick = [0:2e3:12e3];
-ax2.YTickLabel = {'0','2k','4k','6k','8k','10k','12k'};
 ax2.XTickLabelRotation = 35;
 ax2.YLabel.String = sprintf('Ave. New Cases Across Previous %d Days',mvw);
 ax2.YLabel.FontSize = 12;
@@ -147,7 +142,7 @@ ax2.XGrid = 'on'; ax2.YGrid = 'on';
 ax2.Title.String = sprintf('Newly Diagnosed Cases (averaged across previous %d days)',mvw);
 
 lgd2 = legend(p2([find(strcmp(allStates,'New York')),idx]),...
-               ['New York', whichStates], 'Location','NorthWest');
+               ['New York', x], 'Location','NorthWest');
            
 print(f2,'Figures/New Cases-US.eps','-depsc');
 
@@ -166,18 +161,15 @@ end
 ax3 = gca;
 ax3.YScale = 'linear';
 ax3.XTick = dk:7:length(allDates);
-ax3.XLim = [dk-5 length(allDates)+5];
 ax3.XTickLabel = datestr(allDates([dk:7:end]),'dd-mmm');
 ax3.XTickLabelRotation = 35;
 ax3.YLabel.String = 'Total Number of Cases';
 ax3.YLabel.FontSize = 12;
 ax3.XGrid = 'on'; ax3.YGrid = 'on';
-ax3.YTick = 0:20e3:120e3;
-ax3.YTickLabel = {'0','20k','40k','60k','80k','100k','120k'};
 ax3.Title.String = sprintf('Total Confirmed Cases as of %s',allDates{end});
 
 lgd3 = legend(p3([find(strcmp(allStates,'New York')),idx]),...
-               ['New York', whichStates], 'Location','NorthWest');
+               ['New York', x], 'Location','NorthWest');
 print(f3,'Figures/Total Confirmed Cases-US.eps','-depsc');
 
 %% Movie
